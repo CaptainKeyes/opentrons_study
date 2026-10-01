@@ -45,7 +45,7 @@ def run(protocol: protocol_api.ProtocolContext):
         source = plate.rows()[0][i]
         #记住，plate要和上面的plate相对应
         #这边学会一个重要参数，plate.rows，即按行进行[行][列]
-        #[[labware:A1, labware:A2...], [labware:B1, labware:B2...]]
+        #rows():List of lists grouped by row.[[labware:A1, labware:A2...], [labware:B1, labware:B2...]]
         destination = plate.rows()[1][i]
         right_pipette.aspirate(20, source)
         right_pipette.dispense(20, destination)
@@ -56,7 +56,7 @@ def run(protocol: protocol_api.ProtocolContext):
         right_pipette.aspirate(30,source)
         right_pipette.dispense(30,destination)
         #同理，plate.columns()，按列进行[列][行]
-        #[[labware:A1, labware:B1...], [labware:A2, labware:B2...]]
+        #columns():List of lists grouped by column.[[labware:A1, labware:B1...], [labware:A2, labware:B2...]]
     #从C1 → D1、C3 → D3 
     for i in range(0,4,2):
         source = plate.rows()[2][i]
@@ -64,7 +64,13 @@ def run(protocol: protocol_api.ProtocolContext):
         right_pipette.aspirate(30,source)
         right_pipette.dispense(30,destination)
     #行和列一定要搞搞清楚。
-    #具体见官网Labware：Accessor methods
+    #从A1 → A2、B1 → B2 
+    for i in range(9):
+        source = plate.wells()[i]
+        destination = plate.wells()[i+8]
+        right_pipette.aspirate(30,source)
+        right_pipette.dispense(30,destination)
+        #wells():List of all wells.[labware:A1, labware:B1, labware:C1...]
     
     # 5. Drop tip
     right_pipette.drop_tip()  #既然有droptip就需要设置trash_bin
