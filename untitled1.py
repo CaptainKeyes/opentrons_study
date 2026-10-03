@@ -50,6 +50,13 @@ def run(protocol: protocol_api.ProtocolContext):
         destination = plate.rows()[1][i]
         right_pipette.aspirate(20, source)
         right_pipette.dispense(20, destination)
+    #从C1 → D1、C3 → D3 
+    for i in range(0,4,2): #遵循range的语法，list(range(0,4,2))
+        source = plate.rows()[2][i]
+        destination = plate.rows()[3][i]
+        right_pipette.aspirate(30,source)
+        right_pipette.dispense(30,destination)
+    #行和列一定要搞搞清楚。
     #从C3 → C4、D3 → D4、E3 → E4 
     for i in range(2,5):
         source = plate.columns()[2][i]
@@ -58,13 +65,6 @@ def run(protocol: protocol_api.ProtocolContext):
         right_pipette.dispense(30,destination)
         #同理，plate.columns()，按列进行[列][行]
         #columns():List of lists grouped by column.[[labware:A1, labware:B1...], [labware:A2, labware:B2...]]
-    #从C1 → D1、C3 → D3 
-    for i in range(0,4,2):
-        source = plate.rows()[2][i]
-        destination = plate.rows()[3][i]
-        right_pipette.aspirate(30,source)
-        right_pipette.dispense(30,destination)
-    #行和列一定要搞搞清楚。
     #从A1 → A2、B1 → B2 
     for i in range(9):
         source = plate.wells()[i]
