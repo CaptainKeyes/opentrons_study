@@ -79,7 +79,14 @@ def run(protocol: protocol_api.ProtocolContext):
     #Equivalently, using rows_by_name:
     for well in plate.rows_by_name()["A"]:
         right_pipette.transfer(50,reservoir["A1"], well)
-    #因此，有两种方法，1：将transfer()用在drop_tip()之后。
+    #因此，有两种方法，1：将transfer()用在drop_tip()之后。就是现在这个方法。
+    #2：因为transfer() 默认相当于：new_tip="always"，即自己插上一个新枪头，设置成new_tip="never"
+    #但是注意，这两种方法是不同的，因为这种方法默认new_tip="never"，pipette就不会插新枪头。而会默认目前的tip就是new_tip，它会从source加入dest后，不换枪头继续从source中吸液，这个是需要注意的！
+    #transfer是核心方法，该方法在后续学习过程中也会继续学习。
+    right_pipette.pick_up_tip()
+    for well in plate.columns_by_name()["5"]:
+        right_pipette.transfer(40, reservoir["A2"], well, new_tip="never")
+    right_pipette.drop_tip()
  
 
 
