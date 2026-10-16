@@ -72,7 +72,8 @@ def run(protocol: protocol_api.ProtocolContext):
     #移动到垃圾桶在A3
     #将吸头丢入垃圾桶在A3
     
-    # 7. transfer()
+    # 7. Transfer()
+    #Move liquid from one well or group of wells to another.
     #问题是：transfer() 默认会自己管理枪头,transfer() 默认相当于：自己 pick_up_tip()，aspirate()，dispense()，drop_tip()。因此，此时再用transfer()就会报"have a tip attached"的错。
     for well in plate.rows()[0]:
         right_pipette.transfer(50,reservoir["A1"], well)
