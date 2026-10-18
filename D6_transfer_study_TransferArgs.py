@@ -36,7 +36,7 @@ def run(protocol: protocol_api.ProtocolContext):
         "A3"
     )
 
-    # 4.Transfer Args
+    # 4.Transfer():new_tip
     '''
     right_pipette.transfer(
         3.1, 
@@ -69,6 +69,7 @@ def run(protocol: protocol_api.ProtocolContext):
         touch_tip=True) #如果在transfer中使用touch_tip参数，只能使用默认参数，如果需要自定义，则需要自己编写。
     #If True, perform a touch_tip() following each aspirate() and dispense(). Defaults to False.
     
+    # 5.Transfer():touch_tip
     #Touch the pipette tip to the sides of a well, with the intent of removing leftover droplets.
     right_pipette.pick_up_tip() 
     right_pipette.transfer(
@@ -85,7 +86,8 @@ def run(protocol: protocol_api.ProtocolContext):
         #radius 和 mm_from_edge 不能同时设置。两者都是表示How far to move inside the well，只不过一个是百分比，一个是绝对距离
         #真实实验时需要在单孔中进行验证。
     right_pipette.drop_tip()
-
+    
+    # 6.Transfer():blow_out
     right_pipette.transfer(
         3.6, 
         plate.rows()[0][:4:2], 
@@ -121,6 +123,7 @@ def run(protocol: protocol_api.ProtocolContext):
         blow_out=True )#这里就能看到，剩余液体是默认排空到B1孔中，即blowout_location="source well"
     right_pipette.drop_tip()
     
+    # 7.Transfer():mix_before,mix_after
     right_pipette.transfer(
         4.1, 
         plate["A8"], 
