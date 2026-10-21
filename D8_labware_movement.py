@@ -127,6 +127,7 @@ def run(protocol: protocol_api.ProtocolContext):
     #When you're done with a lid, use move_lid() to dispose of it in the waste chute or a trash bin:
     #注意，这个拿走盖子是真的拿走盖子，"opentrons_tough_pcr_auto_sealing_lid"本身不会像qPCR膜那个样子粘在PCR板子上。所以并不是像qPCR膜一样把膜撕掉。
     #这个耗材的材质是聚砜（Polysulfone），它是一个有刚性边框的盖子，中间有密封结构。它的密封原理是：当热循环仪的加热盖压下来时，把盖子紧紧压在 PCR 板孔的上方，形成物理密封来防止蒸发和污染。它不是靠粘合剂贴在板子上的，所以 PCR 结束后，机械臂抓住边框把它拿起来时，它就会整个脱离，不会在板子上留下残胶。
+    #等等，那我只要做一个大的托盘，里面放上类似于罗氏qPCR膜这样的静电膜是否就可以了呢，然后压下去的时候可以自动吸附上孔板，相比普通的lid可以降低液面蒸发    
     protocol.move_lid(
         source_location=tc_plate,
         new_location=trash,
