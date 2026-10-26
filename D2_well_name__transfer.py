@@ -94,7 +94,7 @@ def run(protocol: protocol_api.ProtocolContext):
 '''
 #如果想直接在Spyder 里面自己观察这些东西，用get_protocol_api()即可
 from opentrons.simulate import get_protocol_api
-protocol = get_protocol_api("2.20")
+protocol = get_protocol_api("2.29",robot_type="Flex")
 plate = protocol.load_labware(
     "corning_96_wellplate_360ul_flat",
     "D2"
