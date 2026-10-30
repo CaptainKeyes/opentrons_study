@@ -1,7 +1,7 @@
 from opentrons import protocol_api
 
 metadata = {
-    "protocolName": "D10:整合个PCR程序",
+    "protocolName": "D10:整合整个PCR程序",
     "author": "Your Name"
 }#都是字典类型
 
