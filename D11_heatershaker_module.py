@@ -37,6 +37,7 @@ def run(protocol: protocol_api.ProtocolContext):
     #Shaking requires the labware latch to be closed, so you may want to issue a close command before the first shake command in your protocol:
     hs_mod.close_labware_latch()
     hs_mod.set_and_wait_for_shake_speed(500)
+    #latch是锁定命令，防止shake的时候把板子给晃出去。没有热盖意味着板孔是敞开的，在 75°C 这样的高温下长时间孵育，液体会明显蒸发。常见对策是贴封板膜(sealing film)——振荡时贴膜是允许的，但注意不要用松动的盖子或盖片，振荡时会脱落。
     
     
     # 6. Loading labware
