@@ -112,7 +112,10 @@ def run(protocol: protocol_api.ProtocolContext):
     #These flow rates will remain in effect until you change the flow_rate attribute again or call configure_for_volume(). Calling configure_for_volume() always resets all pipette flow rates to the defaults for the mode that it sets.
     #这也是老知识点了。低容量模式的时候用过。
     pipette_1chan.configure_for_volume(30)
-    pipette_1chan.pick_up_tip()
+
+    if not pipette_1chan.has_tip:
+        pipette_1chan.pick_up_tip()
+    #检查是否已经有枪头，这样可以避免重复拾取枪头。
     pipette_1chan.aspirate(34, plate_384["K14"])
     pipette_1chan.dispense(34, plate_384["L14"])
     
