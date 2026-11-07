@@ -30,7 +30,12 @@ def run(protocol: protocol_api.ProtocolContext):
     trash = protocol.load_trash_bin("A3")
     
     # 4. Load Thermocycler module
-    tc_mod = protocol.load_module(module_name="thermocyclerModuleV2")
+    tc_mod = protocol.load_module(module_name="thermocyclerModuleV2",location="B1")
+    hs_mod = protocol.load_module(module_name="heaterShakerModuleV1",location="C1")
+    #只能放1、3列
+    hs_adapter = hs_mod.load_adapter("opentrons_96_pcr_adapter")
+    #adaptor只是声明，其实adaptor应该在实验开始前就已经螺丝拧在module上了。
+    #如果是PCR板对应的是PCR的adapter
     
     # 5. Load riser and lids
     riser = protocol.load_adapter(load_name="opentrons_flex_deck_riser",location="A2")
@@ -276,16 +281,42 @@ def run(protocol: protocol_api.ProtocolContext):
         #把低体积模式给关掉
         pipette_50.configure_for_volume(10) 
     
-    def move_placte_to_pcr_module():
-        tc_mod.open_lid()
-        
+def move_plate_to_shaker_pcr_module():
+        # 1. 先移动到shaker module上振荡混匀
+        #按理来说latch都是打开的，但是保险起见再打开一下
+        hs_mod.open_labware_latch()
         protocol.move_labware(
             labware=plate_PCR, 
+            new_location=hs_adapter, #这里应该是一定到adapter上而不是移动到module上
+            use_gripper=True
+            )
+        hs_mod.close_labware_latch()
+        hs_mod.set_shake_speed(600)
+        #这里不需要振荡多精确，主要是混匀，哪怕不是到600rpm也能接受，反正振荡个30s差不多就行了
+        protocol.delay(seconds=30)
+        '''
+        其实这里是不是也可以
+        incubation_timer = protocol.create_timer(seconds=30)
+        protocol.wait_for_tasks([incubation_timer])
+        两者在简单任务上是等价的，复杂任务上的话，可能wait_for_tasks更灵活，简单任务上delay更简便易懂
+        其实也可以这样：
+        shake_task=hs_mod.set_and_wait_for_shake_speed(600)
+        protocol.wait_for_tasks([shake_task])
+        相当于刚到500rpm就停，这就省去timer了（好像不太行，到时候试一下）
+        '''
+        hs_mod.deactivate_shaker()
+        #不管是delay，还是wait_for_task本质都是一个timer，其实不改变整个module自己的运行，自己的运行是需要deactivate去终止的
+        hs_mod.open_labware_latch()
+        
+        # 2. 放到PCR module上
+        tc_mod.open_lid()
+        protocol.move_labware(
+            labware=plate_PCR, #不管怎么样，对象都是plate_PCR，不能因为plate_PCR在hs_adapter上就把位置变成hs_adapter
             new_location=tc_mod,
             use_gripper=True
             )
         
-        # move lid to PCR plate
+        # 3. move lid to PCR plate
         protocol.move_lid(
             source_location=lid_stack,
             new_location=plate_PCR,
@@ -328,7 +359,7 @@ def run(protocol: protocol_api.ProtocolContext):
     prepare_master_mix()
     add_samples_to_pcr_plate()
     add_master_mix_to_pcr_plate()
-    move_placte_to_pcr_module()
+    move_plate_to_shaker_pcr_module() #这就是函数块的好处，只需要改函数块就行，别的地方不用动
     pcr_program()
             
         
