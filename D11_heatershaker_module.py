@@ -112,6 +112,7 @@ def run(protocol: protocol_api.ProtocolContext):
     protocol.delay(minutes=1)
     #You can also use concurrent commands to heat and shake simultaneously. The amount of time it takes for the Heater-Shaker Module to reach either the target temperature or shake speed won't affect other steps in your protocol. The concurrent set_target_temperature() and set_shake_speed() methods also allow some other simultaneous module actions. 
     #由于本来就是两个功能，所以HS module本来就设计了两者可以同时执行。
+    #这里记住一个口诀，hs是wait_for是等待，没有wait_for是立即开始；tc是start是立即开始，没有start是等待。
     
     # 10. Deactivating
     #Deactivate the heater and shaker separately using the deactivate_heater() and deactivate_shaker() methods, respectively. There is no method to deactivate both simultaneously. Call the two methods in sequence if you need to stop both heating and shaking.
