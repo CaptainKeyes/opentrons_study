@@ -276,6 +276,10 @@ def run(protocol: protocol_api.ProtocolContext):
                 end_location=destinations.meniscus(z=-1, target="end"),
                 disposal_volume=2.0
             )
+            哈哈哈，我后边补充well position知识的时候才发现，meniscus() 方法不能独立使用，它必须依赖系统已经“知道”的液体高度信息。
+            方法一：在协议中“加载液体”（推荐用于已知体积）
+            方法二：让移液器“探测液面”（用于未知体积）
+            得亏这里放在annotation中，否则程序就报错了
             '''
         
         #把低体积模式给关掉
