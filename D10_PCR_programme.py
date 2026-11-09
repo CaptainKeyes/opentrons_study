@@ -307,6 +307,11 @@ def move_plate_to_shaker_pcr_module():
         shake_task=hs_mod.set_and_wait_for_shake_speed(600)
         protocol.wait_for_tasks([shake_task])
         相当于刚到500rpm就停，这就省去timer了（好像不太行，到时候试一下）
+        set_and_wait_for_shake_speed 本身就是一个会“等待”的阻塞式命令，又把它套进 wait_for_tasks 里，逻辑上就冲突了。
+        如果要做的话应该是：
+        shake_task1=hs_mod.set_shake_speed(600)
+        protocol.wait_for_tasks([shake_task1])
+        这里 set_shake_speed 只是“下达指令”，返回一个代表该异步操作的 Task，然后由 protocol.wait_for_tasks 来统一等待这个 Task 完成。这种写法是合理的。
         '''
         hs_mod.deactivate_shaker()
         #不管是delay，还是wait_for_task本质都是一个timer，其实不改变整个module自己的运行，自己的运行是需要deactivate去终止的
