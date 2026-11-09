@@ -359,12 +359,18 @@ def move_plate_to_shaker_pcr_module():
     # --------------------------------------------------------
     # C. 主流程：按实验顺序调用控制函数
     # --------------------------------------------------------
-    
-    prepare_master_mix()
-    add_samples_to_pcr_plate()
-    add_master_mix_to_pcr_plate()
-    move_plate_to_shaker_pcr_module() #这就是函数块的好处，只需要改函数块就行，别的地方不用动
-    pcr_program()
+
+    #这就是函数块的好处，只需要改函数块就行，别的地方不用动
+    with protocol.group_steps(name="prepare_master_mix"):
+        prepare_master_mix()
+    with protocol.group_steps(name="add_samples_to_pcr_plate"):
+        add_samples_to_pcr_plate()
+    with protocol.group_steps(name="add_master_mix_to_pcr_plate"):
+        add_master_mix_to_pcr_plate()
+    with protocol.group_steps(name="move_plate_to_shaker_pcr_module"):
+        move_plate_to_shaker_pcr_module()
+    with protocol.group_steps(name="pcr_program"):
+        pcr_program()
             
         
             
